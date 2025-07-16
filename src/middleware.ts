@@ -14,19 +14,36 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Extract subdomain
+  // Extract subdomain based on environment
   const parts = hostname.split('.');
-  
-  // Check if we have a subdomain (more than 2 parts: subdomain.sellin.tn)
-  if (parts.length >= 3) {
-    const subdomain = parts[0];
-    
-    // Skip www subdomain
-    if (subdomain === 'www') {
-      return NextResponse.next();
-    }
+  let subdomain = '';
 
-    // If we're on a subdomain, rewrite to the store page
+  // Handle different domain formats
+  if (hostname.includes('vercel.app')) {
+    // Vercel deployment: subdomain-sellin-tn.vercel.app or sellin-tn.vercel.app
+    if (parts.length >= 3 && !hostname.startsWith('sellin-tn.vercel.app')) {
+      // Extract subdomain from: subdomain-sellin-tn.vercel.app
+      const firstPart = parts[0];
+      if (firstPart.includes('-sellin-tn')) {
+        subdomain = firstPart.replace('-sellin-tn', '');
+      } else if (firstPart !== 'sellin-tn') {
+        subdomain = firstPart;
+      }
+    }
+  } else if (hostname.includes('sellin.tn')) {
+    // Local development: subdomain.sellin.tn
+    if (parts.length >= 3) {
+      subdomain = parts[0];
+      
+      // Skip www subdomain
+      if (subdomain === 'www') {
+        return NextResponse.next();
+      }
+    }
+  }
+
+  // If we have a valid subdomain, rewrite to the store page
+  if (subdomain && subdomain !== 'www' && subdomain !== 'sellin-tn') {
     url.pathname = `/store/${subdomain}`;
     return NextResponse.rewrite(url);
   }
