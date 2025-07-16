@@ -10,29 +10,47 @@ interface StoreData {
   assetsPath: string;
 }
 
-// Load stores data from API
+// In-memory store (same as in API) - in production, this would be a database
+const stores: Record<string, StoreData> = {
+  // Demo stores for testing
+  teststore: {
+    name: 'teststore',
+    createdAt: new Date().toISOString(),
+    status: 'active',
+    subdomain: 'teststore',
+    assetsPath: '/stores/teststore/assets'
+  },
+  demo: {
+    name: 'demo',
+    createdAt: new Date().toISOString(),
+    status: 'active',
+    subdomain: 'demo',
+    assetsPath: '/stores/demo/assets'
+  }
+};
+
+// Load store data - first check local, then try API for newly created stores
 async function loadStoreData(storeName: string): Promise<StoreData | null> {
+  // First check our local store
+  const localStore = stores[storeName.toLowerCase()];
+  if (localStore) {
+    return localStore;
+  }
+
+  // If not found locally, try the API (for newly created stores)
   try {
-    // For server-side rendering, we need to construct the full URL
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : process.env.NODE_ENV === 'development' 
-      ? 'http://localhost:3000' 
-      : 'https://sellin-tn.vercel.app';
-    
-    const response = await fetch(`${baseUrl}/api/create-store?name=${storeName}`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'https://sellin-tn.vercel.app'}/api/create-store?name=${storeName}`, {
+      next: { revalidate: 60 } // Cache for 1 minute
     });
     
-    if (!response.ok) {
-      return null;
+    if (response.ok) {
+      return await response.json();
     }
-    
-    return await response.json();
   } catch (error) {
-    console.error('Error loading store data:', error);
-    return null;
+    console.log('Store not found in API:', error);
   }
+
+  return null;
 }
 
 // Generate metadata for the store page
