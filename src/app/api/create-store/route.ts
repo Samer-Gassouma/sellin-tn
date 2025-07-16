@@ -88,10 +88,10 @@ export async function POST(request: NextRequest) {
     let storeUrl: string;
     
     if (host.includes('vercel.app')) {
-      // For Vercel deployment, use the pattern that works with middleware
-      storeUrl = `https://${normalizedName}-sellin-tn.vercel.app`;
+      // For Vercel deployment, use path-based routing
+      storeUrl = `https://${host}/store/${normalizedName}`;
     } else {
-      // For local development
+      // For local development, use subdomain routing
       storeUrl = `http://${normalizedName}.sellin.tn`;
     }
 

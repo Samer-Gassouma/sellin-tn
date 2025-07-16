@@ -8,17 +8,23 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [storeUrl, setStoreUrl] = useState('');
   const [isVercel, setIsVercel] = useState(false);
+  const [currentHost, setCurrentHost] = useState('');
 
-  // Detect if we're on Vercel
+  // Detect environment and current host
   useEffect(() => {
-    setIsVercel(window.location.hostname.includes('vercel.app'));
+    const hostname = window.location.hostname;
+    const isVercelEnv = hostname.includes('vercel.app');
+    setIsVercel(isVercelEnv);
+    setCurrentHost(window.location.host);
   }, []);
 
   const getPreviewUrl = (name: string) => {
-    if (!name) return 'yourstore.sellin.tn';
+    if (!name) {
+      return isVercel ? 'sellin-tn.vercel.app/store/yourstore' : 'yourstore.sellin.tn';
+    }
     const cleanName = name.toLowerCase();
     if (isVercel) {
-      return `${cleanName}-sellin-tn.vercel.app`;
+      return `${currentHost}/store/${cleanName}`;
     }
     return `${cleanName}.sellin.tn`;
   };
@@ -111,7 +117,7 @@ export default function Home() {
                   href={storeUrl} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium text-sm bg-indigo-50 px-3 py-2 rounded-md hover:bg-indigo-100 transition-colors"
+                  className="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium text-sm bg-indigo-50 px-3 py-2 rounded-md hover:bg-indigo-100 transition-colors break-all"
                 >
                   🚀 {storeUrl}
                 </a>
@@ -124,8 +130,8 @@ export default function Home() {
           <p>Test with existing stores:</p>
           <div className="mt-2 space-x-2">
             <a 
-              href={isVercel ? "https://teststore-sellin-tn.vercel.app" : "http://teststore.sellin.tn"} 
-              target="_blank" 
+              href={isVercel ? `/store/teststore` : "http://teststore.sellin.tn"} 
+              target={isVercel ? "_self" : "_blank"}
               rel="noopener noreferrer"
               className="text-indigo-600 hover:text-indigo-700 underline"
             >
@@ -133,8 +139,8 @@ export default function Home() {
             </a>
             <span>•</span>
             <a 
-              href={isVercel ? "https://demo-sellin-tn.vercel.app" : "http://demo.sellin.tn"} 
-              target="_blank" 
+              href={isVercel ? `/store/demo` : "http://demo.sellin.tn"} 
+              target={isVercel ? "_self" : "_blank"}
               rel="noopener noreferrer"
               className="text-indigo-600 hover:text-indigo-700 underline"
             >
