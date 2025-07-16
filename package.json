@@ -6,7 +6,16 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npm run lint && npm run build",
+    "setup": "cp env.example .env && npm install",
+    "clean": "rm -rf .next && rm -rf stores && rm -f stores-data.json",
+    "backup": "cp stores-data.json stores-data-backup-$(date +%Y%m%d).json && tar -czf stores-backup-$(date +%Y%m%d).tar.gz stores/",
+    "logs": "tail -f logs/combined.log",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop sellin-tn",
+    "pm2:restart": "pm2 restart sellin-tn",
+    "pm2:status": "pm2 status"
   },
   "dependencies": {
     "react": "19.1.0",

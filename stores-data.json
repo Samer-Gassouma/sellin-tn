@@ -1,0 +1,30 @@
+{
+  "try": {
+    "name": "try",
+    "createdAt": "2025-07-16T06:09:01.213Z",
+    "status": "active",
+    "subdomain": "try.sellin.tn",
+    "assetsPath": "/home/ivan/pog/sellin-tn/stores/try"
+  },
+  "teststore": {
+    "name": "teststore",
+    "createdAt": "2025-07-16T06:16:09.185Z",
+    "status": "active",
+    "subdomain": "teststore.sellin.tn",
+    "assetsPath": "/home/ivan/pog/sellin-tn/stores/teststore"
+  },
+  "trydd": {
+    "name": "trydd",
+    "createdAt": "2025-07-16T06:26:19.911Z",
+    "status": "active",
+    "subdomain": "trydd.sellin.tn",
+    "assetsPath": "/home/ivan/pog/sellin-tn/stores/trydd"
+  },
+  "trydddddf": {
+    "name": "trydddddf",
+    "createdAt": "2025-07-16T06:39:31.685Z",
+    "status": "active",
+    "subdomain": "trydddddf.sellin.tn",
+    "assetsPath": "/home/ivan/pog/sellin-tn/stores/trydddddf"
+  }
+}
